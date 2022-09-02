@@ -4,6 +4,8 @@ var session = require('express-session') //session을 사용하기 위해 필요
 var FileStore = require('session-file-store')(session);
 var flash = require('connect-flash');
 
+
+////-----오류
 app.use(session({ //session을 미들웨어로서 application에 설치해줌
     secret: 'asadlfkj!@#!@#dfgasdg', //required option
     resave: false, //false : 세션 데이터가 바뀌기 전까지는 세션 저장소의 값을 저장하지 않음, true : 값이 바뀌건 바뀌지 않건 계속 저장소에 저장을 함.
