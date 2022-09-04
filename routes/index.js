@@ -11,21 +11,29 @@ router.get('/', function(request, response){
     //passport를 사용하지 않으면 request는 user 객체가 없다.
     //하지만 passport를 사용하면 passport가 request에 user 객체를 주입해줌
     //그러면 우리는 user의 값을 기준으로 사용자가 로그인 했는지 하지 않았는지를 체크할 수 있다.
-    console.log('/', request.user);    
-    //response.send('test');
+/*     console.log('/', request.user);    
+    //response.send('test'); 
+     if(request.session.view){
+        request.session.count++;
+      }//if
+      else{
+        request.session.count = 1;
+      }//else
+      response.send('count : '+ request.session.count); */
+    
 
     var fmsg = request.flash(); //일회성 메세지
     var feedback = '';
     if(fmsg.success){
         feedback = fmsg.success[0];
     }//if
-    var map = '<img src="../img/map_gray.ai" style="width:300px display:block; margin-top:10px;">';
-
-    var html = template.HTML(map,
+    var map = '<h1>abc<\h1>';// '<img src="../img/map_gray.ai" style="width:300px display:block; margin-top:10px;">';
+    var title = '';
+    var html = template.HTML(title, map,
         `<div style="color:blue;">${feedback}</div>`,
         auth.statusUI(request,response)
         );//html
-    
+    response.send(html);
 }//function
 )//router.get
 
