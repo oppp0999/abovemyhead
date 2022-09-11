@@ -1,16 +1,31 @@
-var express = require('express');
-var app = express()
-var session = require('express-session') //session을 사용하기 위해 필요한 미들웨어
-//var FileStore = require('session-file-store')(session);//파일형식으로 저장하는 방법
-var MySQLStore = require('express-mysql-session')(session);//MySQL 방식으로 세션 값을 저장하는 방법
-var flash = require('connect-flash');
+var app = require('./config/mysql/express')();
+var passport = require('./config/mysql/passport')(app);
 
-var authRouter = require('./routes/auth');
+var authRouter = require('./routes/auth')(passport);
 var indexRouter = require('./routes/index');
 
 
-app.use('/', indexRouter);
-app.use('/auth', authRouter);
+//app.use('/', indexRouter);
+app.get('/', function(req, res){
+  if(req.user && req.user.displayName) {
+    res.send(`
+      <h1>Hello, ${req.user.displayName}</h1>
+      <a href="/auth/signout">Sign Out</a>
+    `);
+  }//if 
+  else {
+    res.send(`
+      <h1>Welcome</h1>
+      <ul>
+        <li><a href="/auth/signin">Sign IN</a></li>
+        <li><a href="/auth/signup">Sign UP</a></li>
+      </ul>
+    `);
+  }//else
+}//function
+);//app.get
+
+app.use('/auth/', authRouter);
 app.use(function(req, res, next) {//404 error 처리하는 미들웨어
     res.status(404).send('Sorry cant find that!');
   }//function

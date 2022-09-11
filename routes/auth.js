@@ -1,54 +1,74 @@
-var express = require('express');
-var router = express.Router();
-var template = require('../lib/template.js');
-var auth = require('../lib/auth');
-var ERRtext = require('../lib/errtext');
-var shortid = require('shortid');
+module.exports = function(passport){
+    var bkfd2Password = require("pbkdf2-password");
+    var hasher = bkfd2Password()
+    var conn = require('../config/mysql/db')();
+    var route = require('express').Router();
+    var template = require('../lib/template');
 
+    //기본적으로/auth 로 위임이 되어있기에 뺀다
+    route.post('/signin',
+      passport.authenticate(
+        'local',
+        {
+            successRedirect: '/',
+            failureRedirect: '/auth/signin',
+            failureFlash: false
+        }
+      )//passport.authenticate
+    );//route.post
 
-
-router.get('/signup', function(request, response){
-    var feedback = '';
-    ERRtext(request,response, feedback);
-    var title = 'Sign UP';
-    var map = '';
-    var html = template.HTML(title, map, `
-    <div style="color:red;>${feedback}</div>
-        <form action="/auth/signup_process" method="post">
-            <p><input type="text" name="email" placeholder="email" value=""></p>
-            <p><input type="password" name="pwd" placeholder="password" value=""></p>
-            <p><input type="password" name="pwd2" placeholder="password" value=""></p>
-            <p><input type="text" name="displayName" placeholder=display name" value=""></p> 
-            <p>
-                <input type="submit" value="submit">
-            </p>
-        </form>
-    `,'');//template.HTML
-
-   response.send(html);
-}//function
-);//router.get
-
-router.post('/signup_process', function(request, response){
-    var post = request.body;
-    var email = post.email;
-    var pwd = post.pwd;
-    var pwd2 = post.pwd2;
-    var displayName = post.displayName;
-
-    if(pwd !== pwd2){
-        request.flash('error','Password must same');
-        response.redirect('/auth/signup');
-    }//if
-    else {
+    route.post('/signup', function(req, res){
+      hasher({password:req.body.password}, function(err, pass, salt, hash){
         var user = {
-            id:shortid.generate(), //랜던 아이디 값 생성
-            email:email,
-            password:pwd,
-            displayNameL:displayName
-        }//user
-        
-    }//else
+          authId:'local:'+req.body.username,
+          username:req.body.username,
+          password:hash,
+          salt:salt,
+          displayName:req.body.displayName
+        };//user
+        var dir = __dirname;
+        var sql = 'INSERT INTO users SET ?';
+        conn.query(sql, user, function(err2, results){
+            if(err2){
+                console.log(err2);
+                res.send(`
+                <a href="/">Back</a>`
+                +template.ERRPAGE('The username that already exists.'));
+            }//if
+            else {
+                    //패스포트의 로그인함수 requset.login
+                req.login(user, function(err){
+                    req.session.save(function(){
+                    res.redirect('/');
+                    });//req.session.save
+                });//req.signin
+            }//else
+        });//conn.query
+    });//hasher
+    });//route.post
 
-}//function
-)//router.post
+    route.get('/signup', function(req, res){
+        res.render('auth/signup');
+      /* var sql = 'SELECT id,title FROM topic';
+      conn.query(sql, function(err, topics, fields){
+        res.render('auth/signup', {topics:topics});
+      }); */
+    });//route.get
+
+    route.get('/signin', function(req, res){
+        res.render('auth/signin');
+      /* var sql = 'SELECT id,title FROM topic';
+      conn.query(sql, function(err, topics, fields){
+        res.render('auth/signin', {topics:topics});
+      }); */
+    });//route.get
+
+    route.get('/signout', function(req, res){
+      //패스포트의 로그아웃함수 requset.logout
+      req.logout();
+      req.session.save(function(){
+        res.redirect('/');
+      });
+    });//route.get
+    return route;
+  }//module.exports

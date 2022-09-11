@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var template = require('../lib/template.js');
 var auth = require('../lib/auth');
-
 //express가 제공하는 route 방식을 활용하면 각각의 처리하는 부분의 request와 response를 각각 구현하기 때문에
 //필요한 것들이 잘 모여있다
 
@@ -21,12 +20,11 @@ router.get('/', function(request, response){
       }//else
       response.send('count : '+ request.session.count); */
     
-
-    var fmsg = request.flash(); //일회성 메세지
-    var feedback = '';
-    if(fmsg.success){
-        feedback = fmsg.success[0];
-    }//if
+      var fmsg = request.flash();
+      var feedback = '';
+      if(fmsg.success){
+          feedback = fmsg.success[0];
+      }
     var map = '<h1>abc<\h1>';// '<img src="../img/map_gray.ai" style="width:300px display:block; margin-top:10px;">';
     var title = '';
     var html = template.HTML(title, map,

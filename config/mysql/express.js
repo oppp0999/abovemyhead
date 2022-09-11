@@ -5,9 +5,10 @@ module.exports = function(){
     var bodyParser = require('body-parser');
     var app = express()
 
-    app.set('views', './views/mysql');
-    app.set('views', './views/mysql');
-    app.set('view engine', 'jade');
+    app.set('views', __dirname+'/views'); //view/mysql 지정
+    //console.log('views ../../views/mysql');
+    app.set('view engine', 'jade'); //제이드로 저장하는 방식
+
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(session({
         secret: '1234DSFs@adf1234!@#$asd',
