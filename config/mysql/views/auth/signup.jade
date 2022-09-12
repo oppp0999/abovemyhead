@@ -1,8 +1,10 @@
-extends ../layout
+extends ../auth_layout
 block content
   form(action='/auth/signup', method='post')
     p
       input(type='text', name='username', placeholder='username')
+      =" "
+      errtext=errtext
     p
       input(type='password', name='password', placeholder='password')
     p

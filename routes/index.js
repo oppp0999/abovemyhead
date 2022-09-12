@@ -5,34 +5,29 @@ var auth = require('../lib/auth');
 //express가 제공하는 route 방식을 활용하면 각각의 처리하는 부분의 request와 response를 각각 구현하기 때문에
 //필요한 것들이 잘 모여있다
 
-router.get('/', function(request, response){
-    //console.log('/', request.user);를 해보면 email, password, nickname이 나온다.
-    //passport를 사용하지 않으면 request는 user 객체가 없다.
-    //하지만 passport를 사용하면 passport가 request에 user 객체를 주입해줌
-    //그러면 우리는 user의 값을 기준으로 사용자가 로그인 했는지 하지 않았는지를 체크할 수 있다.
-/*     console.log('/', request.user);    
-    //response.send('test'); 
-     if(request.session.view){
-        request.session.count++;
-      }//if
-      else{
-        request.session.count = 1;
-      }//else
-      response.send('count : '+ request.session.count); */
-    
-      var fmsg = request.flash();
-      var feedback = '';
-      if(fmsg.success){
-          feedback = fmsg.success[0];
-      }
-    var map = '<h1>abc<\h1>';// '<img src="../img/map_gray.ai" style="width:300px display:block; margin-top:10px;">';
+router.get('/', function(req, res){
+  if(req.user && req.user.displayName) {
+    var title = 'HOME';
+    var html = template.index_HTML(title, 
+      `<h1>Hello, ${req.user.displayName}</h1>
+      <a href="/user/upload">How about on your head now?</a>
+      <a href="/auth/signout">Sign Out</a>`
+    );//html
+    res.send(html);
+  }//if 
+  else {
     var title = '';
-    var html = template.HTML(title, map,
-        `<div style="color:blue;">${feedback}</div>`,
-        auth.statusUI(request,response)
-        );//html
-    response.send(html);
+    var html = template.index_HTML(title, 
+      `<h1>Welcome</h1>
+      <ul>
+        <li><a href="/auth/signin">Sign IN</a></li>
+        <li><a href="/auth/signup">Sign UP</a></li>
+      </ul>
+    `
+    );//html
+    res.send(html);
+  }//else
 }//function
-)//router.get
+);//router.get
 
 module.exports = router;

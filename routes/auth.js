@@ -26,14 +26,12 @@ module.exports = function(passport){
           salt:salt,
           displayName:req.body.displayName
         };//user
-        var dir = __dirname;
+        //var dir = __dirname;
         var sql = 'INSERT INTO users SET ?';
         conn.query(sql, user, function(err2, results){
             if(err2){
                 console.log(err2);
-                res.send(`
-                <a href="/">Back</a>`
-                +template.ERRPAGE('The username that already exists.'));
+                res.render('auth/signup',{errtext:'The username that already exists.'});
             }//if
             else {
                     //패스포트의 로그인함수 requset.login
@@ -71,4 +69,4 @@ module.exports = function(passport){
       });
     });//route.get
     return route;
-  }//module.exports
+}//module.exports
