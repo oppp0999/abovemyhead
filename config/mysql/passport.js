@@ -26,6 +26,7 @@ module.exports = function(app){
         }//else
       });//conn.query
     });//passport.deserializeUser
+    
     passport.use(new LocalStrategy(
       function(username, password, done){
         var uname = username;
