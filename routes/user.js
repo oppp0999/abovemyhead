@@ -8,7 +8,7 @@ const { connect } = require('http2');
 
 router.get('/upload', function(req, res){
     console.log('upload get');
-    
+    //deserializeUser으로인해서 세션에 담긴 값을 넘겨받을 수 있다. console.log(req.user.);
     //res.render('auth/signup',{errtext:'The username that already exists.'});
     res.render('user/upload');
     }//function
@@ -31,13 +31,15 @@ var upload = multer({
 
 //image는 input태그의 name 속성, 미들웨어 설정
 router.post("/upload/create", upload.single('image'), function(req, res, next){
-    var auth_id = req.session.authId;
-    var username = req.session.username;
-    var displayName = req.session.displayName;
+
+    var auth_id = req.user.authId;
+    var username = req.user.username;
+    var displayName = req.user.displayName;
     var title = req.body.title;
     var description = req.body.description;
     var image = `/images/${req.file.filename}`;
     var datas = [auth_id, username, displayName, title, description, image];//datas
+    console.log(datas);
 
     var sql = "INSERT INTO users_img(auth_id, username, displayName, title, description, image) values(?,?,?,?,?,?)";
     conn.query(sql, datas, function(err, results){

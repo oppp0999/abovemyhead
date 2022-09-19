@@ -1,4 +1,7 @@
 module.exports = function(app){
+    var fs = require('fs');
+    var path = require('path');
+    //var ciqlJson = require('ciql-json')
     var conn = require('./db')();
     var bkfd2Password = require("pbkdf2-password");
     var passport = require('passport');
@@ -14,7 +17,7 @@ module.exports = function(app){
     });//passport.serrializeUser
 
     passport.deserializeUser(function(id, done) {
-      console.log('deserializeUser', id);
+      //console.log('deserializeUser', id);
       var sql = 'SELECT * FROM users WHERE authId=?';
       conn.query(sql, [id], function(err, results){
         if(err){
@@ -26,7 +29,7 @@ module.exports = function(app){
         }//else
       });//conn.query
     });//passport.deserializeUser
-    
+
     passport.use(new LocalStrategy(
       function(username, password, done){
         var uname = username;
@@ -40,6 +43,16 @@ module.exports = function(app){
           return hasher({password:pwd, salt:user.salt}, function(err, pass, salt, hash){
             if(hash === user.password){
               console.log('LocalStrategy', user);
+              /* var filepath = path.join(__dirname,'../../data', 'user_info.json');
+              var filedata = fs.readFileSync(filepath);
+              var user_info = JSON.parse(filedata); */
+              //user_info.push(user.authId, user.username, user.displayName);
+              //fs.writeFileSync(filepath, JSON.stringify(user_info));
+/*               ciqlJson
+                    .open('data/user_info.json')
+                    .set('user_info', {auth_id: user.authId, displayName: user.displayName})
+                    .save()
+ */
               done(null, user);
             }//if 
             else {
