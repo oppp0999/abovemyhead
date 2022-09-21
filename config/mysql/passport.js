@@ -17,7 +17,7 @@ module.exports = function(app){
     });//passport.serrializeUser
 
     passport.deserializeUser(function(id, done) {
-      //console.log('deserializeUser', id);
+      console.log('deserializeUser', id);
       var sql = 'SELECT * FROM users WHERE authId=?';
       conn.query(sql, [id], function(err, results){
         if(err){

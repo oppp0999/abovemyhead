@@ -21,7 +21,7 @@ var storage = multer.diskStorage({
   },//destination:function
   filename:function(req, file, cd){
     const ext = path.extname(file.originalname);
-    cd(null, path.basename(file.originalname, ext) + "-" + Date.now())
+    cd(null, path.basename(file.originalname, ext) + "-" + Date.now()) //1970년 1월 1일 00:00:00(UTC)을 기점으로 현재 시간까지 경과한 밀리초를 숫자로 반환한다.
   },//filename:function
 });//multer.diskStorage
 
@@ -37,21 +37,25 @@ router.post("/upload/create", upload.single('image'), function(req, res, next){
     var displayName = req.user.displayName;
     var title = req.body.title;
     var description = req.body.description;
-    var image = `/images/${req.file.filename}`;
-    var datas = [auth_id, username, displayName, title, description, image];//datas
+    var image_file = req.file.filename;
+    var image_original = Buffer.from(`/images/${req.file.filename}`,'latin1').toString('utf8');
+    var area = req.body.area;
+    var datas = [auth_id, username, displayName, title, description, image_original, image_file, area];//datas
     console.log(datas);
 
-    var sql = "INSERT INTO users_img(auth_id, username, displayName, title, description, image) values(?,?,?,?,?,?)";
+     var sql = "INSERT INTO users_img(authId, username, displayName, title, description, image_file, image_original, area) values(?,?,?,?,?,?,?,?)";
     conn.query(sql, datas, function(err, results){
       if(err){
+        res.send(`<script>alert('upload error')</script>`);
         console.error("err : " + err);
       }//if
       else{
         console.log("results: " + JSON.stringify(results));
-        res.redirect('/');
+        res.send("<script>alert('upload success');location.href='/';</script>");
+        //res.redirect('/');
       }//else
     }//function
-    );//conn.query
+    );//conn.query 
   }//function
 );//route.post
 

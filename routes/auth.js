@@ -5,6 +5,7 @@ module.exports = function(passport){
     var route = require('express').Router();
     var template = require('../lib/template');
 
+
     //기본적으로/auth 로 위임이 되어있기에 뺀다
     route.post('/signin',
       passport.authenticate(
