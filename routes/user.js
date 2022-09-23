@@ -21,7 +21,7 @@ var storage = multer.diskStorage({
   },//destination:function
   filename:function(req, file, cd){
     const ext = path.extname(file.originalname);
-    cd(null, path.basename(file.originalname, ext) + "-" + Date.now()) //1970년 1월 1일 00:00:00(UTC)을 기점으로 현재 시간까지 경과한 밀리초를 숫자로 반환한다.
+    cd(null, path.basename(file.originalname, ext) + "-" + `${Date.now()}.png`) //1970년 1월 1일 00:00:00(UTC)을 기점으로 현재 시간까지 경과한 밀리초를 숫자로 반환한다.
   },//filename:function
 });//multer.diskStorage
 
