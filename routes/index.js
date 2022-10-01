@@ -27,6 +27,9 @@ router.get('/', function(req, res){
     );//html
     res.send(html);
   }//else
+  /* if(req.file){
+    console.log(req.file);
+  }//if */
 }//function
 );//router.get
 

@@ -2,6 +2,9 @@ var app = require('./config/mysql/express')();
 var express = require('express');
 var passport = require('./config/mysql/passport')(app);
 var pathComp=require('express-static');
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 var authRouter = require('./routes/auth')(passport);
 var indexRouter = require('./routes/index');
