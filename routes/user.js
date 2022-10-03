@@ -41,6 +41,9 @@ const upload = multer({ storage:storage });
 
 //image는 input태그의 name 속성, 미들웨어 설정
 router.post("/upload/create", upload.single('image') ,async (req, res) => {
+  ////////////////////새로운 라우팅으로 땡기고 사진들 옮기면서 가공하기
+
+
   let info = req.body;
   console.log(info);
   const image = req.file;
