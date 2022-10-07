@@ -1,33 +1,33 @@
 extends ../user_layout
 block content
-    form(action='/user/upload/create' method='post' enctype='multipart/form-data')
-      select(onchange='showValue(this)' name='area')
-        option(value='st16') 서울특별시
-        option(value='st15') 경기도
-        option(value='st14') 강원도
-        option(value='st13') 인천광역시
-        option(value='st12') 충청북도
-        option(value='st11') 대전광역시
-        option(value='st10') 대구광역시
-        option(value='st9') 경상북도
-        option(value='st8') 전라북도
-        option(value='st7') 광주광역시
-        option(value='st6') 전라남도
-        option(value='st5') 충청남도
-        option(value='st4') 부산광역시
-        option(value='st3') 울산광역시
-        option(value='st2') 경상남도
-        option(value='st1') 제주도
-      p
-      input(type='text', name='title', placeholder='title')
-      p
-      textarea(name="description", placeholder="description")
-      table(border='1')
-        tbody
-          tr 
-            td
-              input(type='file' name='file')
-          tr
-            td(colspan='2')
-              button(type='submit') 글쓰기
+  form(action='/user/upload/create' method='post' enctype='multipart/form-data')
+    select(onchange='showValue(this)' name='area')
+      option(value='st16') 서울특별시
+      option(value='st15') 경기도
+      option(value='st14') 강원도
+      option(value='st13') 인천광역시
+      option(value='st12') 충청북도
+      option(value='st11') 대전광역시
+      option(value='st10') 대구광역시
+      option(value='st9') 경상북도
+      option(value='st8') 전라북도
+      option(value='st7') 광주광역시
+      option(value='st6') 전라남도
+      option(value='st5') 충청남도
+      option(value='st4') 부산광역시
+      option(value='st3') 울산광역시
+      option(value='st2') 경상남도
+      option(value='st1') 제주도
+    p
+    input(type='text', name='title', placeholder='title')
+    p
+    textarea(name="description", placeholder="description")
+    table(border='1')
+      tbody
+        tr 
+          td
+            input(type='file' name='image' accept="image/*")
+        tr
+          td(colspan='2')
+            button(type='submit') 글쓰기
 <!-->input(type='file' name='image' accept="image/*")<-->
