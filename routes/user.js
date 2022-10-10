@@ -54,6 +54,11 @@ router.post("/upload/create", upload.single('image') ,(req, res) => {
 }//function
 );//route.post
 
+/* router.get("/upload/create/", function(req,res){
+  res.write(`<img src="../lib/img/Loadding.gif"`);
+  res.end();
+}); */
+
 router.get("/upload/create/ing", function(req,res){
   var uid = req.user.uid;
   var u_dir = `/Users/kimheejae/Desktop/project/abovemyhead/workspace/assets/${uid}`;
@@ -65,14 +70,13 @@ router.get("/upload/create/ing", function(req,res){
     files = results.slice();
     console.log(files);
     if(util.imgfiles(u_dir, files)){
-      jimp.img_processing(u_dir, files, res);
+     jimp.img_processing(u_dir, files, res);
     }//if
   });//readdir
 
-  //res.render('user/upload/create/ing');
+  //res.render('user/loadding');
 }//function
 );//router.get
-
 
 
 //비동기로 접속하지만 파라미터를 2개 추가하여 테스트에서 문제가 발생할 수 있다.... 분리된 모듈은 웹서버에 의존성을 가지기에 테스트가 불가능함... 콜백으로 다시 재 구성해야함.

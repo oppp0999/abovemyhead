@@ -33,7 +33,4 @@ router.get('/', function(req, res){
 }//function
 );//router.get
 
-
-
-
 module.exports = router;
