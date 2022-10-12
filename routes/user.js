@@ -9,6 +9,9 @@ var fs = require('fs');
 var path = require ('path');
 var AWS = require('aws-sdk');
 var util = require ('../lib/util');
+var db_util = require('../lib/db_util');
+
+
 
 router.get('/upload' , function(req, res){
     console.log('upload get');
@@ -48,22 +51,17 @@ router.post("/upload/create", upload.single('image') ,(req, res) => {
     res.send(`<script>alert('image empty');location.href='/user/upload';</script></script>`);
   }
   else{
-    readData(req,res);
+    db_util.upload(req,res,conn,util);
   }
 
 }//function
 );//route.post
 
-/* router.get("/upload/create/", function(req,res){
-  res.write(`<img src="../lib/img/Loadding.gif"`);
-  res.end();
-}); */
 
 router.get("/upload/create/ing", function(req,res){
   var uid = req.user.uid;
   var u_dir = `/Users/kimheejae/Desktop/project/abovemyhead/workspace/assets/${uid}`;
   console.log('ing get');
-
 
   var files;
   fs.readdir(`${u_dir}/images/raw/`, (err, results) => {
@@ -73,36 +71,9 @@ router.get("/upload/create/ing", function(req,res){
      jimp.img_processing(u_dir, files, res);
     }//if
   });//readdir
-
   //res.render('user/loadding');
 }//function
 );//router.get
 
 
-//비동기로 접속하지만 파라미터를 2개 추가하여 테스트에서 문제가 발생할 수 있다.... 분리된 모듈은 웹서버에 의존성을 가지기에 테스트가 불가능함... 콜백으로 다시 재 구성해야함.
-var readData = function(req, res) {
-    var auth_id = req.user.authId;
-    var uid = req.user.uid;
-    var displayName = req.user.displayName;
-    var title = req.body.title;
-    var description = req.body.description;
-    var image_file = req.file.filename;
-    var image_original = Buffer.from(`images/${req.file.filename}`,'latin1').toString('utf8');
-    var area = req.body.area;
-    var datas = [auth_id, uid, displayName, title, description, image_original, image_file, area];//datas
-    console.log(datas);
-    var sql = "INSERT INTO users_img(authId, uid, displayName, title, description, image_file, image_original, area) values(?,?,?,?,?,?,?,?)";
-    conn.query(sql, datas, function(err, results){
-      if(err){
-        res.send(`<script>alert('upload error');location.href='/user/upload';</script></script>`);
-        console.error("err : " + err);
-      }//if
-      else{
-        console.log("results: " + JSON.stringify(results));
-        res.send(`<script>location.href='/user/upload/create/ing';</script>`);
-        //res.redirect('/');
-      }//else
-    }//function
-    );//conn.query 
-}//readData
 module.exports = router;

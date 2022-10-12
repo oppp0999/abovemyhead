@@ -2,16 +2,23 @@ var express = require('express');
 var router = express.Router();
 var template = require('../lib/template.js');
 var auth = require('../lib/auth');
+var util = require('../lib/util');
 //express가 제공하는 route 방식을 활용하면 각각의 처리하는 부분의 request와 response를 각각 구현하기 때문에
 //필요한 것들이 잘 모여있다
 
 router.get('/', function(req, res){
+  let location;
+  if (typeof document !== "undefined") {
+    location = window.document.location;
+  }
+  console.log(location);
+
   if(req.user && req.user.displayName) {
     var title = 'HOME';
     var html = template.index_HTML(title, 
       `<h1>Hello, ${req.user.displayName}</h1>
       <a href="/user/upload">How about on your head now?</a>
-      <a href="/auth/signout">Sign Out</a>`
+      <a href="/auth/signout">Sign Out</a>`,{st1:`<img src="../lib/img/icon2.png">`}
     );//html
     res.send(html);
   }//if 
@@ -32,5 +39,7 @@ router.get('/', function(req, res){
   }//if */
 }//function
 );//router.get
+
+
 
 module.exports = router;
