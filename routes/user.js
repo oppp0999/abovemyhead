@@ -1,4 +1,3 @@
-var conn = require('../config/mysql/db')();
 var express = require('express');
 var router = express.Router();
 var template = require('../lib/template');
@@ -51,7 +50,7 @@ router.post("/upload/create", upload.single('image') ,(req, res) => {
     res.send(`<script>alert('image empty');location.href='/user/upload';</script></script>`);
   }
   else{
-    db_util.upload(req,res,conn,util);
+    db_util.upload(req,res,util);
   }
 
 }//function
