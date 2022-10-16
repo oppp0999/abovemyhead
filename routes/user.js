@@ -66,7 +66,7 @@ router.get("/upload/create/ing", function(req,res){
   fs.readdir(`${u_dir}/images/raw/`, (err, results) => {
     files = results.slice();
     console.log(files);
-    if(util.imgfiles(u_dir, files)){
+    if(util.imgfiles_raw(u_dir, files)){
      jimp.img_processing(u_dir, files, res);
     }//if
   });//readdir
