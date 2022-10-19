@@ -46,7 +46,7 @@ router.get('/', async function(req, res){
       <ul>
         <li><a href="/auth/signin">Sign IN</a></li>
         <li><a href="/auth/signup">Sign UP</a></li>
-        <li><a href="/auth/signup">Sign UP</a></li>
+
       </ul>
     `
     );//html

@@ -9,6 +9,8 @@ var path = require ('path');
 var AWS = require('aws-sdk');
 var util = require ('../lib/util');
 var db_util = require('../lib/db_util');
+var file_util = require('../lib/file_util');
+
 
 
 
@@ -39,17 +41,19 @@ var storage = multer.diskStorage({
 });//multer.diskStorage
 
 var upload = multer({
-  storage:storage
+  storage:storage,
 });//multer
 
 
 //image는 input태그의 name 속성, 미들웨어 설정
-router.post("/upload/create", upload.single('image') ,(req, res) => {
+router.post("/upload/create", upload.single('image') , (req, res) => {
   console.log(req.file);
   if(req.file == undefined){
     res.send(`<script>alert('image empty');location.href='/user/upload';</script></script>`);
   }
   else{
+    var u_dir = `/Users/kimheejae/Desktop/project/abovemyhead/workspace/assets/${req.user.uid}`;
+    file_util.resize(u_dir, req.file.filename);
     db_util.upload(req,res,util);
   }
 
@@ -58,6 +62,7 @@ router.post("/upload/create", upload.single('image') ,(req, res) => {
 
 
 router.get("/upload/create/ing", function(req,res){
+  
   var uid = req.user.uid;
   var u_dir = `/Users/kimheejae/Desktop/project/abovemyhead/workspace/assets/${uid}`;
   console.log('ing get');
@@ -65,10 +70,18 @@ router.get("/upload/create/ing", function(req,res){
   var files;
   fs.readdir(`${u_dir}/images/raw/`, (err, results) => {
     files = results.slice();
-    console.log(files);
-    if(util.imgfiles_raw(u_dir, files)){
-     jimp.img_processing(u_dir, files, res);
-    }//if
+    console.log(files, files.length);
+    var i = 0;
+    while(i<files.length){
+      if(files[i].includes('resize_')){
+        console.log('resize file check ok');
+        if(util.imgfiles_raw(u_dir, files[i])){
+          
+          jimp.img_processing(u_dir, files[i], res);
+        }//if
+      }//if
+      i++;
+    }//while
   });//readdir
   //res.render('user/loadding');
 }//function
