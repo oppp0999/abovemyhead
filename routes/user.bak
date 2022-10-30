@@ -43,7 +43,7 @@ var storage = multer.diskStorage({
 });//multer.diskStorage
 
 var upload = multer({
-  storage:storage
+  storage:storage,
 });//multer
 
 
@@ -54,8 +54,6 @@ router.post("/upload/create", upload.single('image') , (req, res) => {
     res.send(`<script>alert('image empty');location.href='/user/upload';</script></script>`);
   }
   else{
-    console.log( req.file.buffer);
-
     var u_dir = `/Users/kimheejae/Desktop/project/abovemyhead/workspace/assets/${req.user.uid}`;
     file_util.resize(u_dir, req.file.filename);
     db_util.upload(req,res,util);
